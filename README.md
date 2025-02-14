@@ -18,3 +18,6 @@ Hypothesis testing: Breusch-Pagan, Sargan’s test for instrument validity
 ## Conclusion:
 R&D spending alone doesn't seem to directly impact productivity—delays, institutional factors, and country-specific differences might explain why. 
 Maybe it’s not just how much you invest, but how you use it! 
+
+_
+📂 Fichier disponible : Presentation.pdf
