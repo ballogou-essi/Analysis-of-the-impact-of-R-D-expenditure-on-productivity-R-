@@ -1,3 +1,13 @@
+# 1. Introduction  
+
+Our study assesses the impact of research and development (R&D) expenditures on total factor productivity in a sample of 71 upper-middle and high-income countries. Productivity will be defined here as a measure of technical progress and therefore of innovation, especially process innovation. 
+Our study then examines the potential determinants of technical progress. The results obtained provide insights into the role of R&D investment policies in stimulating competitiveness and therefore economic growth
+
+# 2. Data and Methodology
+
+## 2.1 Variables, measures, units and sources
+
+Below is a summary table of the variables used in this study, including their measures and sources.
 Below is a summary table of the variables used in this study, including their measures and sources.
 # Load knitr for creating tables
 library(knitr)
@@ -53,3 +63,8 @@ variables_summary <- data.frame(
 # Display the table using kable
 kable(variables_summary, col.names = c("Variables", "Measures", "Units", "Sources"), 
       caption = "Summary of Variables Used in the Study")
+
+# 3. DESCRIPTIVES 
+ Let's look at the data and make some descriptive statistics !
+ 
+## 3.1 Descriptive statistics of some variables
