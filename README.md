@@ -1,4 +1,4 @@
-## Analysis of the Impact of R&D Expenditure on Productivity 📊
+## Introduction 
 Hi there! 
 
 Ever wondered if investing in R&D actually boosts productivity? Well, we did too! Our study explores the link between research & development (R&D) spending and total factor productivity (TFP) across 71 upper-middle and high-income countries.
