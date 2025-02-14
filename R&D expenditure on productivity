@@ -1,0 +1,55 @@
+Below is a summary table of the variables used in this study, including their measures and sources.
+# Load knitr for creating tables
+library(knitr)
+
+# Creating a table of our variables
+variables_summary <- data.frame(
+  Variables = c(
+    "tfp",
+    "exprd",
+    "stability",
+    "population",
+    "unemploy",
+    "inflation",
+    "regulary",
+    "educ",
+    "export"
+  ),
+  Measures = c(
+    "Total factor productivity measures the efficiency with which inputs (like labor and capital) are used to produce output in an economy. It reflects the overall productivity of all factors of production combined",
+    "Gross domestic expenditures on research and development (R&D). They include both capital and current expenditures.",
+    "Political Stability and Absence of Violence/Terrorism: Percentile rank indicates the country's rank among all countries covered by the aggregate indicator, with 0 corresponding to lowest rank, and 100 to highest rank.",
+    "Annual population growth rate.",
+    "Unemployment refers to the share of the labor force that is without work but available for and seeking employment",
+    "Inflation as measured by the annual growth rate of the GDP implicit deflator ",
+    "Regulatory Quality (Estimate), measures the government's ability to formulate and implement sound policies and regulations that promote private sector development.",
+    "School enrollment, tertiary",
+    "Exports of goods and services"
+  ),
+  Units = c(
+    "non-specific (is typically measured as an index number)",
+    "% GDP",
+    "Percentile Rank",
+    "annual %",
+    "% of total labor force",
+    "annual %",
+    "a standardized scale ranging from -2.5 (low quality) to +2.5 (high quality)",
+    "% gross",
+    "(constant 2015 US$)"
+  ),
+  Sources = c(
+    "Our World in Data (Feenstra et al. (2015), Penn World Table (2021))",
+    "UNESCO Institute(WDI)",
+    "World Bank(WDI)",
+    "World Bank(WDI)",
+    "World Bank(WDI)",
+    "World Bank(WDI)",
+    "World Governance Indicators",
+    "World Bank",
+    "World Bank(WDI)"
+  )
+)
+
+# Display the table using kable
+kable(variables_summary, col.names = c("Variables", "Measures", "Units", "Sources"), 
+      caption = "Summary of Variables Used in the Study")
