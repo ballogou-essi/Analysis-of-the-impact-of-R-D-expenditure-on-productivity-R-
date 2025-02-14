@@ -1,0 +1,259 @@
+# Upload packages and data
+```{r}
+library(dplyr)
+library(ggplot2)
+library(lmtest)
+library(corrplot)
+library(stargazer)
+library(readr)
+library(readxl)
+
+our_data <- read_excel("C:/Users/ballo/Documents/project_économétrie/NEW_DATA/merged_data.xlsx")
+our_data
+names(our_data) <- c("Country",
+                     "gdp",
+                     "population",
+                     "unemploy",
+                     "export",
+                     "inflation",
+                     "educ",
+                     "stability",
+                     "exprd",
+                     "regulary","tfp")
+
+colnames(our_data)
+
+```
+# 1. Introduction  
+Our study assesses the impact of research and development (R&D) expenditures on total factor productivity in a sample of 71 upper-middle and high-income countries. 
+Productivity will be defined here as a measure of technical progress and therefore of innovation, especially process innovation. Our study then examines the potential determinants of technical progress. 
+The results obtained provide insights into the role of R&D investment policies in stimulating competitiveness and therefore economic growth.
+# 2. Data and Methodology
+
+## 2.1 Variables, measures, units and sources
+
+Below is a summary table of the variables used in this study, including their measures and sources.
+```{r, echo=FALSE}
+# Load knitr for creating tables
+library(knitr)
+
+# Creating a table of our variables
+variables_summary <- data.frame(
+  Variables = c(
+    "tfp",
+    "exprd",
+    "stability",
+    "population",
+    "unemploy",
+    "inflation",
+    "regulary",
+    "educ",
+    "export"
+  ),
+  Measures = c(
+    "Total factor productivity measures the efficiency with which inputs (like labor and capital) are used to produce output in an economy. It reflects the overall productivity of all factors of production combined",
+    "Gross domestic expenditures on research and development (R&D). They include both capital and current expenditures.",
+    "Political Stability and Absence of Violence/Terrorism: Percentile rank indicates the country's rank among all countries covered by the aggregate indicator, with 0 corresponding to lowest rank, and 100 to highest rank.",
+    "Annual population growth rate.",
+    "Unemployment refers to the share of the labor force that is without work but available for and seeking employment",
+    "Inflation as measured by the annual growth rate of the GDP implicit deflator ",
+    "Regulatory Quality (Estimate), measures the government's ability to formulate and implement sound policies and regulations that promote private sector development.",
+    "School enrollment, tertiary",
+    "Exports of goods and services"
+  ),
+  Units = c(
+    "non-specific (is typically measured as an index number)",
+    "% GDP",
+    "Percentile Rank",
+    "annual %",
+    "% of total labor force",
+    "annual %",
+    "a standardized scale ranging from -2.5 (low quality) to +2.5 (high quality)",
+    "% gross",
+    "(constant 2015 US$)"
+  ),
+  Sources = c(
+    "Our World in Data (Feenstra et al. (2015), Penn World Table (2021))",
+    "UNESCO Institute(WDI)",
+    "World Bank(WDI)",
+    "World Bank(WDI)",
+    "World Bank(WDI)",
+    "World Bank(WDI)",
+    "World Governance Indicators",
+    "World Bank",
+    "World Bank(WDI)"
+  )
+)
+
+# Display the table using kable
+kable(variables_summary, col.names = c("Variables", "Measures", "Units", "Sources"), 
+      caption = "Summary of Variables Used in the Study")
+```
+
+## 2.2 Data Preparation 
+The data used in this study are cross-sectional, covering several countries. Observations for each country are aggregated over the period 2000–2015 for most variables to create an annual average of the selected variables. This approach provides a wide range of observations while minimizing the effects of year-specific economic fluctuations.
+
+# 3. DESCRIPTIVES 
+ Let's look at the data and make some descriptive statistics !
+ 
+## 3.1 Descriptive statistics of some variables
+```{r}
+variables <- our_data %>% select(tfp, exprd, stability, population, unemploy, inflation, educ) 
+summary(variables)
+
+stargazer(as.data.frame(variables), 
+           type = "text",
+           title = "Table: Descriptive statistics of some variables",
+           covariate.labels = c("Total Factor Productivity", "R&D expenditures", "Political stability", 
+                                "Population growth rate", "Unemployement", "Inflation", "Education level"))
+```
+ - Total Factor Productivity (TFP): The mean is close to 1, suggesting a fairly high overall productive efficiency across countries. The relatively low standard deviation indicates some homogeneity across countries
+
+  - R&D expenditures: The mean is above 1, indicating a high level of R&D investment. The large standard deviation shows a large heterogeneity across countries in terms of R&D investments
+
+  - Political stability: The mean is high, suggesting a high level of political stability overall. The standard deviation is also large, indicating significant differences across countries.
+
+  - Population growth rate: The mean is slightly above 1, suggesting positive population growth overall. The very high standard deviation indicates a large variability in population growth rates across countries.
+
+  - Unemployment: The mean is 7,628, representing a medium unemployment rate. The large standard deviation shows a large dispersion of unemployment rates across countries.
+
+  - Inflation: The mean is 1.923, which suggests a relatively low level of inflation. However, the very high standard deviation indicates a large variability in inflation rates.
+
+  - Education level: The mean is 55.14, which indicates a medium level of education. The large standard deviation shows a large disparity in terms of education level across countries.
+
+## 3.2 Correlation matrix
+let look the relationship between tfp (Total Factor Productivity) and other variables:
+```{r}
+ corr.matrix <- cor(variables)
+ corr.matrix
+ # Plot the correlation matrix
+corrplot(corr.matrix, method = 'square',  diag = F, addCoef.col ='black', number.cex = 0.7)
+```
+The correlation matrix reveals the direction of relationships between variables. The TFP (Total Factor Productivity) has a positive correlation (0.56) with population growth and negative correlations with R&D expenditure (exprd, -0.20) and education (-0.35). 
+Notably, stability and education have a moderate positive correlation (0.46). The issue of multicollinearity may arise because "stability" and its quadratic form (stability^2) are likely to be correlated, and education correlates significantly with R&D expenditures (0.45).
+
+## 3.3 R&D expenditure histogram by country
+```{r}
+
+# Numbers of select country
+n <- 71
+
+# Sélection aléatoire de n pays
+selected_countries <- sample(unique(our_data$Country), n)
+
+# Filtrage des données pour ne garder que les pays sélectionnés
+filtered_data <- our_data %>% filter(Country %in% selected_countries)
+
+ggplot(filtered_data, aes(x = Country, y = exprd)) +
+  geom_bar (stat = "identity", fill = "skyblue") +
+  labs(x = "Country", y = "R&D Expenditures (% GDP)", title = "    Comparison of R&D expenditure between countries")
+```
+We have a large heterogeneity across countries in terms of R&D investments. The histogram shows this significant variation in R&D expenditures across countries. Some countries allocate 3–4% of GDP to R&D, while others invest much less. 
+This disparity suggests that TFP could be influenced differently across countries, depending on their R&D intensity.
+
+# 4. Relationship between TFP and R&D Expenditures
+```{r}
+#Relationship between TFP and R&D expenditure
+ggplot(our_data, aes(x = exprd, y = tfp)) +
+  geom_point() +
+  labs(x = "R&D Expenditures (% GDP)", y = "Total factor productivity" , title = "                 Relationship between TFP and R&D expenditure")
+```
+The scatter plot shows a weak negative relationship between R&D expenditures and TFP. At lower R&D levels, TFP is more dispersed, but higher R&D expenditures do not necessarily increase TFP. This suggests diminishing returns to R&D investments, or other factors may mediate productivity gains.
+
+Let's see the causality!
+```{r}
+#Impact of R&D expenditures on Productivity
+lm <- lm(log(tfp) ~ exprd, data = our_data)
+summary(lm)
+
+ggplot(our_data, aes(x = exprd, y = log(tfp))) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  ggtitle("                    Impact of R&D expenditures on Log productivity ")
+
+```
+The regression examines the relationship between TFP (Total Factor Productivity) and exprd (R&D expenditure). The coefficient for R&D expenditure is negative (-0.0115) but not statistically significant (p = 0.108). This indicates that there is no strong evidence to suggest that R&D expenditure directly influences TFP in this dataset. The model explains 3.7% of the variation in TFP (R²=0.037).
+
+While it is premature to draw definitive conclusions, our analysis is currently limited by the absence of additional variables that could account for productivity.
+
+
+# 5. Model's specification 
+
+Lets see if multiple regression explains log of productivity better than simple regression !!
+```{r}
+### Modèle simple avec une seule variable explicative
+lm_simple <- lm(log(tfp) ~ exprd, data = our_data)
+#Estimation
+summary_simple <- summary(lm_simple)
+# R²
+r2_simple <-  summary_simple$r.squared
+
+### Modèle multiple avec plusieurs variables explicatives
+lm_multiple <- lm(log(tfp) ~ exprd + stability + I(stability^2) + population + unemploy + inflation + educ, data = our_data)
+#Estimation
+summary_multiple <- summary(lm_multiple)
+# R²
+r2_multiple <- summary_multiple$r.squared
+
+# Affichage des R²
+
+cat("The R² of simple linear regression is : ", r2_simple, "\n") 
+cat("The R² of multiple linear regression is : ", r2_multiple, "\n")
+
+Ftest <- ((r2_multiple - r2_simple) / 6) / ((1 - (r2_multiple)) / (73 - 8))
+cat("The F-test is : ", Ftest, "\n")
+
+```
+**H0: The coefficients of the additional variables in the multiple model are all equal to zero
+Ftest = 7.055571 > 2.18 (5%) 
+We reject the null hypothesis (H0) because the F-test value (7.06) is greater than the Fisher critical value (2.18 at 5%).
+=> The unrestricted model incorporates additional explanatory variables (e.g., stability, population..), allowing it to better capture the factors influencing productivity.
+
+# 6. Models, Estimates and Results
+
+We initially assume that stability does not have a direct marginal effect on total factor productivity (TFP). However, depending on the level of political stability in each country, the marginal effect of stability on TFP will differ. Therefore, the variable "stability" is included along with its square to capture this nonlinear effect.
+We will thus use a multiple linear regression model to estimate the impact of R&D expenditure on TFP. The model specification is as follows:
+
+```{r}
+# Determinants of log (tfp)
+model <- lm(log(tfp) ~ exprd + stability + I(stability^2) + population + unemploy + inflation  + educ , data = our_data)
+
+summary(model)
+plot(model, which = 2) # Normal distribution of errors terms 
+
+```
+#### Interpretation of model: 
+
+ - The intercept is -0.05678, significant at the 10% level (p = 0.0570)
+ 
+ - R&D expenditures (exprd) have a coefficient of 0.00309 but are not significant (p = 0.6821). This suggests that R&D expenditure does not have a clear direct impact on TFP in this model.
+ While R&D investments are theoretically linked to innovation, their impact may be delayed or dependent on complementary factors like education, institutional quality, or the ability to implement innovations.
+
+ - Political stability (stability) has a positive and significant effect (coefficient = 0.00239, p = 0.0167), while its squared term (stability²) has a negative significant effect (coefficient = -0.00002388, p = 0.0102). This indicates a nonlinear effect: the positive impact of stability diminishes at higher levels of stability.
+ 
+ Moderate political stability fosters a favorable economic environment, encouraging investment and innovation. However, excessive stability might reflect economic stagnation or lack of dynamism, reducing productivity gains.
+ 
+ - Population growth (population) has a positive and highly significant effect (coefficient = 0.02172, p < 0.001), highlighting its key role in improving TFP.
+ A growing population increases the labor supply, stimulates demand, and enhances productivity through economies of scale and a larger market.
+
+ - Unemployment (unemploy), inflation (inflation), and education (educ) are not significant, indicating no detectable direct effect on TFP in this model.
+ Their effects might be indirect or inadequately captured within this model.
+ 
+##### R-squared,	Adjusted R-squared, F-test :
+
+ - R² = 0.4168: This indicates that 41.68% of the variability in Total Factor Productivity (TFP) is explained by our model. However, R² tends to increase as more explanatory variables are added to the model.
+ 
+ - Adjusted R² = 0.352: After correcting for degrees of freedom, only 35.2% of the variability in TFP is explained by our model. Adjusted R² provides a more accurate measure of model fit by penalizing the inclusion of irrelevant variables.
+ 
+ - F-statistic = 6.433: The high value of the F-statistic and its low p-value (1.005e-05) allow us to reject the null hypothesis that all the regression coefficients are jointly equal to zero. This confirms that the model is statistically significant and that the included variables effectively explain log(tfp).
+
+##### Points of attention:
+The model indicates a significant effect for political stability and population size on productivity. However, several variables (R&D, unemployment, inflation, education) do not have a significant effect in this specification.
+The low adjusted R² (35.2%) suggests that there are other factors not included in the model that explain the variation in TFP.
+The interaction between stability and stability² highlights a non-linear relationship between stability and productivity, requiring a more detailed analysis
+
+##### Plot the residuals vs. fitted values
+```{r}
+plot(model, which = 1)
+
+```
