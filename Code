@@ -68,3 +68,11 @@ kable(variables_summary, col.names = c("Variables", "Measures", "Units", "Source
  Let's look at the data and make some descriptive statistics !
  
 ## 3.1 Descriptive statistics of some variables
+variables <- our_data %>% select(tfp, exprd, stability, population, unemploy, inflation, educ) 
+summary(variables)
+
+stargazer(as.data.frame(variables), 
+           type = "text",
+           title = "Table: Descriptive statistics of some variables",
+           covariate.labels = c("Total Factor Productivity", "R&D expenditures", "Political stability", 
+                                "Population growth rate", "Unemployement", "Inflation", "Education level"))
