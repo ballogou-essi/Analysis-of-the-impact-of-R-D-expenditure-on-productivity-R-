@@ -15,6 +15,11 @@ Descriptive analysis: Stats, correlation matrix, R&D expenditure distribution
 Regression models: OLS, 2SLS with instruments like regulatory quality & exports
 Hypothesis testing: Breusch-Pagan, Sargan’s test for instrument validity
 
+📕Bibliothèques utilisés 
+
+
+
+
 ## Conclusion:
 R&D spending alone doesn't seem to directly impact productivity—delays, institutional factors, and country-specific differences might explain why. 
 Maybe it’s not just how much you invest, but how you use it! 
