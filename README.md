@@ -16,13 +16,13 @@ Regression models: OLS, 2SLS with instruments like regulatory quality & exports
 Hypothesis testing: Breusch-Pagan, Sargan’s test for instrument validity
 
 📕Bibliothèques utilisées 
-  - library(dplyr)    # Manipulation de données (filtrage, tri, regroupement…)
-  - library(ggplot2)  # Création de graphiques
-  - library(lmtest)   # Tests statistiques pour modèles de régression
-  - library(corrplot) # Visualisation des matrices de corrélation
-  - library(stargazer) # Formatage des résultats de régression pour les rapports
-  - library(readr)    # Lecture de fichiers CSV et autres formats texte
-  - library(readxl)   # Lecture de fichiers Excel (.xls, .xlsx)
+- `dplyr` : Manipulation de données (filtrage, tri, regroupement…)
+- `ggplot2` : Création de graphiques
+- `lmtest` : Tests statistiques pour modèles de régression
+- `corrplot` : Visualisation des matrices de corrélation
+- `stargazer` : Formatage des résultats de régression pour les rapports
+- `readr` : Lecture de fichiers CSV et autres formats texte
+- `readxl` : Lecture de fichiers Excel (.xls, .xlsx)
 
 ## Conclusion:
 R&D spending alone doesn't seem to directly impact productivity—delays, institutional factors, and country-specific differences might explain why. 
